@@ -150,4 +150,12 @@ public class FernflowerOptions {
         put("ind", new StringOption("ind", "indentation string (default is 3 spaces)", "   "));
         put("log", new StringOption("log", "a logging level, possible values are TRACE, INFO, WARN, ERROR", "INFO"));
     }});
+
+    public static Map<String, Object> convertToFernflower(Map<String, FernflowerOption<?>> options) {
+        Map<String, Object> result = new HashMap<>();
+        for (Map.Entry<String, FernflowerOption<?>> option : options.entrySet()) {
+            result.put(option.getKey(), option.getValue().internalDisplayValue());
+        }
+        return result;
+    }
 }
