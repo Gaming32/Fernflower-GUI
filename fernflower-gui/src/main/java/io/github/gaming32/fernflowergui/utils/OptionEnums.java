@@ -1,4 +1,4 @@
-package io.github.gaming32.fernflowergui;
+package io.github.gaming32.fernflowergui.utils;
 
 public final class OptionEnums {
     protected static interface DisplayableEnum {

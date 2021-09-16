@@ -1,12 +1,12 @@
-package io.github.gaming32.fernflowergui;
+package io.github.gaming32.fernflowergui.utils;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.gaming32.fernflowergui.OptionEnums.DisplayableEnum;
-import io.github.gaming32.fernflowergui.OptionEnums.LineEnding;
-import io.github.gaming32.fernflowergui.OptionEnums.LogLevel;
+import io.github.gaming32.fernflowergui.utils.OptionEnums.DisplayableEnum;
+import io.github.gaming32.fernflowergui.utils.OptionEnums.LineEnding;
+import io.github.gaming32.fernflowergui.utils.OptionEnums.LogLevel;
 
 public class FernflowerOptions {
     public static abstract class FernflowerOption<T> {
