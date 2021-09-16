@@ -4,14 +4,26 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.gaming32.fernflowergui.OptionEnums.DisplayableEnum;
+import io.github.gaming32.fernflowergui.OptionEnums.LineEnding;
+import io.github.gaming32.fernflowergui.OptionEnums.LogLevel;
+
 public class FernflowerOptions {
     public static abstract class FernflowerOption<T> {
         public final String internalName;
         public final String prettyName;
+        public final String longDescription;
 
         protected FernflowerOption(String internalName, String prettyName) {
             this.internalName = internalName;
             this.prettyName = prettyName;
+            this.longDescription = prettyName;
+        }
+
+        protected FernflowerOption(String internalName, String prettyName, String longDescription) {
+            this.internalName = internalName;
+            this.prettyName = prettyName;
+            this.longDescription = longDescription;
         }
 
         public abstract T getValue();
@@ -24,6 +36,11 @@ public class FernflowerOptions {
 
         public BooleanOption(String internalName, String prettyName, boolean value) {
             super(internalName, prettyName);
+            this.value = value;
+        }
+
+        public BooleanOption(String internalName, String prettyName, String longDescription, boolean value) {
+            super(internalName, prettyName, longDescription);
             this.value = value;
         }
 
@@ -51,6 +68,11 @@ public class FernflowerOptions {
             this.value = value;
         }
 
+        public IntegerOption(String internalName, String prettyName, String longDescription, int value) {
+            super(internalName, prettyName, longDescription);
+            this.value = value;
+        }
+
         @Override
         public Integer getValue() {
             return value;
@@ -75,6 +97,11 @@ public class FernflowerOptions {
             this.value = value;
         }
 
+        public StringOption(String internalName, String prettyName, String longDescription, String value) {
+            super(internalName, prettyName, longDescription);
+            this.value = value;
+        }
+
         @Override
         public String getValue() {
             return value;
@@ -91,16 +118,55 @@ public class FernflowerOptions {
         }
     }
 
+    public static final class EnumOption<T extends DisplayableEnum> extends FernflowerOption<T> {
+        private final T value;
+
+        public EnumOption(String internalName, String prettyName, T value) {
+            super(internalName, prettyName);
+            this.value = value;
+        }
+
+        public EnumOption(String internalName, String prettyName, String longDescription, T value) {
+            super(internalName, prettyName, longDescription);
+            this.value = value;
+        }
+
+        @Override
+        public T getValue() {
+            return value;
+        }
+
+        @Override
+        public EnumOption<T> withValue(T value) {
+            return new EnumOption<>(internalName, prettyName, value);
+        }
+
+        @Override
+        protected String internalDisplayValue() {
+            return value.toString();
+        }
+    }
+
     public static final class ClassOption extends FernflowerOption<Class<?>> {
         private final Class<?> value;
-
+        
         public ClassOption(String internalName, String prettyName, Class<?> value) {
             super(internalName, prettyName);
             this.value = value;
         }
 
+        public ClassOption(String internalName, String prettyName, String longDescription, Class<?> value) {
+            super(internalName, prettyName, longDescription);
+            this.value = value;
+        }
+
         public ClassOption(String internalName, String prettyName, String className) throws ClassNotFoundException {
             super(internalName, prettyName);
+            this.value = Class.forName(className);
+        }
+
+        public ClassOption(String internalName, String prettyName, String longDescription, String className) throws ClassNotFoundException {
+            super(internalName, prettyName, longDescription);
             this.value = Class.forName(className);
         }
 
@@ -131,24 +197,23 @@ public class FernflowerOptions {
         put("dgs", new BooleanOption("dgs", "decompile generic signatures", false));
         put("ner", new BooleanOption("ner", "assume return not throwing exceptions", true));
         put("den", new BooleanOption("den", "decompile enumerations", true));
-        put("rgn", new BooleanOption("rgn", "remove getClass() invocation, when it is part of a qualified new statement", true));
+        put("rgn", new BooleanOption("rgn", "remove getClass() invocation", "remove getClass() invocation, when it is part of a qualified new statement", true));
         put("lit", new BooleanOption("lit", "output numeric literals \"as-is\"", false));
-        put("asc", new BooleanOption("asc", "encode non-ASCII characters in string and character literals as Unicode escapes", false));
-        put("bto", new BooleanOption("bto", "interpret int 1 as boolean true (workaround to a compiler bug)", true));
-        put("nns", new BooleanOption("nns", "allow for not set synthetic attribute (workaround to a compiler bug)", false));
-        put("uto", new BooleanOption("uto", "consider nameless types as java.lang.Object (workaround to a compiler architecture flaw)", true));
+        put("asc", new BooleanOption("asc", "encode non-ASCII characters", "encode non-ASCII characters in string and character literals as Unicode escapes", false));
+        put("bto", new BooleanOption("bto", "interpret int 1 as boolean true", "interpret int 1 as boolean true (workaround to a compiler bug)", true));
+        put("nns", new BooleanOption("nns", "allow for not set synthetic attribute", "allow for not set synthetic attribute (workaround to a compiler bug)", false));
+        put("uto", new BooleanOption("uto", "consider nameless types as Object", "consider nameless types as java.lang.Object (workaround to a compiler architecture flaw)", true));
         put("udv", new BooleanOption("udv", "reconstruct variable names from debug information, if present", true));
         put("rer", new BooleanOption("rer", "remove empty exception ranges", true));
         put("fdi", new BooleanOption("fdi", "de-inline finally structures", true));
-        put("mpm", new IntegerOption("mpm", "maximum allowed processing time per decompiled method, in seconds. 0 means no upper limit", 0));
-        put("ren", new BooleanOption("ren", "rename ambiguous (resp. obfuscated) classes and class elements", false));
-        put("urc", new ClassOption("urc", "full name of a user-supplied class implementing IIdentifierRenamer interface. It is used to determine which class identifiers should be renamed and provides new identifier names (see \"Renaming identifiers\")", (Class<?>)null));
-        put("inn", new BooleanOption("inn", "check for IntelliJ IDEA-specific @NotNull annotation and remove inserted code if found", true));
+        put("mpm", new IntegerOption("mpm", "maximum allowed processing time per decompiled method", "maximum allowed processing time per decompiled method, in seconds. 0 means no upper limit", 0));
+        put("ren", new BooleanOption("ren", "rename ambiguous classes and class elements", "rename ambiguous (resp. obfuscated) classes and class elements", false));
+        put("urc", new ClassOption("urc", "user-supplied class implementing IIdentifierRenamer interface", "full name of a user-supplied class implementing IIdentifierRenamer interface. It is used to determine which class identifiers should be renamed and provides new identifier names (see \"Renaming identifiers\")", (Class<?>)null));
+        put("inn", new BooleanOption("inn", "check for IntelliJ IDEA-specific @NotNull", "check for IntelliJ IDEA-specific @NotNull annotation and remove inserted code if found", true));
         put("lac", new BooleanOption("lac", "decompile lambda expressions to anonymous classes", false));
-        put("lac", new BooleanOption("lac", "decompile lambda expressions to anonymous classes", false));
-        put("nls", new StringOption("nls", "define new line character to be used for output. 0 - '\\r\\n' (Windows), 1 - '\\n' (Unix), default is OS-dependent", ""));
+        put("nls", new EnumOption<LineEnding>("nls", "define new line character to be used for output", LineEnding.OS_DEPENDENT));
         put("ind", new StringOption("ind", "indentation string (default is 3 spaces)", "   "));
-        put("log", new StringOption("log", "a logging level, possible values are TRACE, INFO, WARN, ERROR", "INFO"));
+        put("log", new EnumOption<LogLevel>("log", "a logging level", LogLevel.INFO));
     }});
 
     public static Map<String, Object> convertToFernflower(Map<String, FernflowerOption<?>> options) {
