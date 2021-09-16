@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler;
 import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger;
+import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 
 public class FernflowerUtils {
     public static void decompile(File from, File to) {
@@ -32,6 +33,10 @@ public class FernflowerUtils {
 
     // Publicize constructor
     protected static class LibraryDecompiler extends ConsoleDecompiler {
+        public LibraryDecompiler(File destination, Map<String, Object> options, IFernflowerLogger logger) {
+            super(destination, options, logger);
+        }
+
         public LibraryDecompiler(File destination, Map<String, Object> options) {
             super(destination, options, new PrintStreamLogger(System.out));
         }

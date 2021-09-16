@@ -27,4 +27,4 @@ jobs:
         if: ${{ matrix.java == 9 && matrix.os == 'ubuntu-latest' }}
         with:
           name: fernflower-gui-jar-artifact
-          path: fernflower-gui/target/fernflower-gui-*.jar
+          path: fernflower-gui/target/Fernflower-Gui-*.jar
